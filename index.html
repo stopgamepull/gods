@@ -1,0 +1,986 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/logo.jpg" type="image/png">
+    <title>CyberColosseum</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
+      * {
+        font-family: "Orbitron", sans-serif;
+      }
+
+    /* Стиль для скроллбара */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+/* Стиль для дорожки скроллбара */
+::-webkit-scrollbar-track {
+    background: linear-gradient(145deg, #6c4700, #004040); /* Градиент зелёных тонов */
+    border-radius: 10px;
+}
+
+/* Стиль для ползунка */
+::-webkit-scrollbar-thumb {
+    background-color: #efdf00; /* Лаймовый зелёный */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(50, 205, 50, 0.8); /* Мягкое свечение */
+}
+
+/* Стиль для ползунка при наведении */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #ffca00; /* Более тёмный зелёный */
+    box-shadow: 0 0 15px rgba(255, 247, 0, 0.8); /* Более яркое свечение */
+}
+
+      body {
+        margin: 0;
+
+        background: linear-gradient(135deg, #ffca00, #4f4100);
+        color: #ffca00;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background: #292400;
+        color: #ffca00;
+        box-shadow: 0 4px 15px #efdf00;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #efdf00;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+      }
+      header nav button {
+        background: none;
+        border: 2px solid #eddd00;
+        border-radius: 8px;
+        color: #ffffff;
+        cursor: pointer;
+        margin-left: 15px;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 8px 15px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      header nav button:hover {
+        background-color: #efdf00;
+        color: #fff;
+      }
+
+      #initial-screen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #000000;
+
+        background: linear-gradient(135deg, #554b00, #000000);
+      }
+
+      #connect-button {
+        background: linear-gradient(135deg, #fff23c, #4f4100);
+        box-shadow: 0 4px 20px rgba(255 236 11 / 50%);
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 15px 30px;
+        transition: transform 0.3s ease, background-color 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      #connect-button:hover {
+        background-color: #c39120;
+        transform: scale(1.2);
+      }
+    
+      .container {
+        padding: 20px;
+        display: none;
+        padding-bottom: 0;
+        animation: fadeIn 1s ease;
+        /* background: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); */
+      }
+
+      .tab-buttons {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+        margin-bottom: 40px;
+      }
+
+      .tab-buttons button {
+        background: none;
+        border: 2px solid #fff23c;
+        color: #ffffff;
+        margin-right: 10px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+
+      .tab-buttons button.active {
+        background-color: #c39120;
+        color: #ffffff;
+      }
+
+      .tab-buttons button:hover {
+        transform: scale(1.02);
+        background-color: #c39120;
+      }
+
+      .content {
+        display: flex;
+        gap: 20px;
+      }
+
+      .lobby {
+        top: 13%;
+        position: absolute;
+        color: #fff;
+        font-size: 35px;
+      }
+
+      /* .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 20px;
+        justify-content: center;
+        width: 50%;
+      } */
+
+      .cards {
+        display: flex;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        justify-content: center;
+        width: 90%;
+      }
+
+      #heroes.cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        justify-content: center;
+        width: 50%;
+        margin-bottom: 20px;
+      }
+
+      .fight-content #selected-hero {
+        width: 250px;
+        height: auto;
+      }
+
+      .card {
+        min-height: 320px;
+        padding: 20px;
+        border: none;
+        background: linear-gradient(145deg, #6c4700, #000000);
+        color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7),
+          0 4px 15px #ffee00;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .fight-content .card {
+        width: 250px;
+        height: auto;
+      }
+
+      /* .fight-content .card--0 {
+        position: absolute;
+        top: 75%;
+        left: 5%;
+      }
+
+      .fight-content .card--1 {
+        position: absolute;
+        top: 75%;
+        right: 5%;
+      }
+
+      .fight-content .card--2 {
+        position: absolute;
+        top: 140%;
+        left: 25%;
+      }
+
+      .fight-content .card--3 {
+        position: absolute;
+        top: 140%;
+        right: 25%;
+      } */
+
+      .details {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 50%;
+        height: 800px;
+        color: #efdf00;
+        padding: 20px;
+        border: 1px solid #efdf00;
+        background: linear-gradient(145deg, #4f4100, #000000);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(50, 205, 50, 0.3);
+      }
+
+      .textBlock {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+
+        height: 600px;
+        margin-bottom: 86px;
+        color: #c39120;
+        padding: 20px;
+        border: 1px solid #efdf00;
+        background: linear-gradient(145deg, #6c4700, #000000);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(50, 205, 50, 0.3);
+      }
+
+      .details img {
+        width: 500px;
+        height: 500px;
+      }
+
+      #selected-hero img {
+        width: 150px;
+        height: 150px;
+      }
+
+      .heroClose {
+      }
+
+      .heroClose button {
+        width: 100%;
+        background-color: #c39120;
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 15px 15px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+      }
+
+      .details button:hover {
+        background-color: #c39120;
+        transform: scale(1.02);
+      }
+
+      .card {
+        min-height: 295px;
+        padding: 20px;
+        border: 1px solid #efdf00;
+        background-color: #372300;
+        color: #efdf00;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255 224 1 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .heroClose {
+        border: 1px solid #606b6b;
+        box-shadow: none;
+      }
+
+      .heroClose img {
+        filter: blur(10px) contrast(200%) brightness(50%);
+      }
+
+      .card img {
+        height: 150px;
+        width: 150px;
+        border-radius: 10px;
+      }
+
+      .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(50, 205, 50, 0.5);
+      }
+      .heroClose:hover {
+        border: 2px solid #606b6b;
+        box-shadow: 0 8px 20px #606b6b;
+      }
+
+      .fight-view {
+        display: none;
+        position: relative;
+        padding: 20px;
+        animation: fadeIn 1s ease;
+      }
+
+      .info {
+        display: none;
+        position: relative;
+        padding: 20px;
+        animation: fadeIn 1s ease;
+        padding-top: 0;
+      }
+
+      .fight-content {
+        margin-top: 382px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      #fights {
+        width: 100%;
+        margin-bottom: 53px;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 15%;
+        left: 1%;
+        background-color: #c39120;
+        border: none;
+        border-radius: 10px;
+        color: #000000;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 15px 30px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+      }
+
+      .back-button:hover {
+        background-color: #c39120;
+        transform: scale(1.2);
+      }
+
+      #fightStart {
+        position: absolute;
+        top: 30%;
+
+        background-color: #c39120;
+        border: none;
+        border-radius: 10px;
+        color: #000000;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 15px 30px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+      }
+
+      #fightStart:hover {
+        background-color: #c39120;
+        transform: scale(1.2);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .stats {
+        width: 100%;
+        font-family: Arial, sans-serif;
+      }
+
+      .stat {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .stat p {
+        margin: 0;
+        flex: 1;
+        font-size: 24px;
+      }
+
+      .progress-bar {
+        height: 10px;
+        flex: 2;
+        background-color: #ddd;
+        border-radius: 5px;
+        margin-left: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-bar::before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: var(--progress);
+        background-color: #c39120; /* Зеленая полоска */
+        border-radius: 5px;
+      }
+
+      .btnA {
+        background: none;
+        text-decoration: none;
+        border: 2px solid #efdf00;
+        border-radius: 8px;
+        color: #ffffff;
+        cursor: pointer;
+        margin-left: 15px;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 8px 15px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .btnA:hover {
+        background-color: #c39120;
+        color: #fff;
+        transform: scale(1.02);
+      }
+
+      #Choose {
+        position: absolute;
+        bottom: -20%;
+        right: 19%;
+        width: 250px;
+        height: 50px;
+        background: none;
+        border: 2px solid #c39120;
+        border-radius: 5px;
+        color: #c39120;
+        cursor: pointer;
+        margin-left: 15px;
+        font-size: 1rem;
+        padding: 5px 10px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+
+        border: 2px solid #fff23c;
+        color: #ffffff;
+        margin-right: 10px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+
+      #Choose:hover {
+        background-color: #c39120;
+        color: #fff;
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="initial-screen">
+      <button id="connect-button">Enter CyberColosseum</button>
+    </div>
+
+    <div id="main-screen" class="container">
+      <header>
+        <h1>CyberColosseum</h1>
+        <nav>
+          <button id="connect">Сonnect</button>
+          <a href="https://x.com/buildrobot_" class="btnA">X</a>
+          <a href="https://t.me/buildrobotproject" class="btnA">Telegram</a>
+          <button>$CyberColosseum</button>
+        </nav>
+      </header>
+
+      <div class="tab-buttons">
+        <button id="info-tab">How it works?</button>
+        <button id="heroes-tab" class="active">Olymp-bots</button>
+        <button id="fights-tab">Arena</button>
+      </div>
+
+      <div id="content" class="content">
+        <div id="heroes" class="cards"></div>
+        <div id="details" class="details"></div>
+        <button id="Choose">Choose</button>
+      </div>
+
+      <div id="fights" class="cards" style="display: none"></div>
+    </div>
+
+    <div id="fight-view" class="fight-view">
+      <header>
+        <h1>CyberColosseum</h1>
+        <nav>
+          <button id="connect2">Сonnect</button>
+          <a href="https://x.com/Agentsarena" class="btnA">X</a>
+          <a href="https://t.me/Agentsarena" class="btnA">Telegram</a>
+          <button>$COLOS</button>
+        </nav>
+      </header>
+      <button class="back-button">Back</button>
+      <div class="fight-content">
+        <h2 class="lobby">Arena</h2>
+        <!-- <div id="selected-hero" class="details"></div> -->
+        <div id="enemy-bots" class="cards"></div>
+        <button id="fightStart" class="fight-button">Fight</button>
+      </div>
+    </div>
+
+    <div id="info" class="info">
+      <div class="textBlock">
+        Welcome to CyberColosseum, the ultimate robot vs robot arena where strategy,
+        skill, and cutting-edge robots collide in combat!
+        <br><br>
+        1. Choose Your Robot Start by selecting a robot from the basic lineup.
+        Each robot has unique stats and abilities tailored to different
+        playstyles. Whether you prefer agility, firepower, or defense, there's a
+        robot waiting for you.
+        <br><br>
+        2. Upgrade Your Robot Boost your robot's performance by upgrading its
+        components. Use $COLOS to enhance speed, power, armor, and special
+        abilities. Make strategic choices to dominate the arena.
+        <br><br>
+        3. Buy Premium Robots Take your gameplay to the next level by purchasing
+        premium robots with $COLOS These advanced models come with superior stats
+        and exclusive abilities to give you a competitive edge.
+        <br><br>
+        4. Enter the Fight Room Challenge other players in high-stakes battles.
+        Victory depends on your strategy, upgrades, and skills. Compete in
+        various modes and prove your dominance in the arena.
+        <br><br>
+        5. Earn $COLOS Win fights to earn $COLOS rewards. The better your
+        performance, the greater your earnings. Use your rewards to further
+        upgrade your robot or unlock premium models.
+        <br><br>
+        6. Climb the Leaderboards Showcase your prowess by climbing the global
+        rankings. Become a legend in CyberColosseum and gain recognition in the
+        community.
+      </div>
+    </div>
+
+    <script>
+      const connectButton = document.getElementById("connect-button");
+      const initialScreen = document.getElementById("initial-screen");
+      const mainScreen = document.getElementById("main-screen");
+      const fightView = document.getElementById("fight-view");
+      const info = document.getElementById("info");
+
+      const heroesTab = document.getElementById("heroes-tab");
+      const fightsTab = document.getElementById("fights-tab");
+      const infoTab = document.getElementById("info-tab");
+      const heroesSection = document.getElementById("heroes");
+      const fightsSection = document.getElementById("fights");
+      const detailsSection = document.getElementById("details");
+      const fightButton = document.getElementById("fight-button");
+      const backButton = document.querySelector(".back-button");
+      const selectedHeroDetails = document.getElementById("selected-hero");
+      const enemyBotsSection = document.getElementById("enemy-bots");
+
+      let selectedHero = null;
+
+      const heroesData = [
+        {
+          name: "Zeus",
+          description: "A god of the sky, thunder, lightning.",
+
+          stats: {
+            Strength: 7,
+            Intellect: 6,
+            Luck: 4,
+            Skill: 5,
+          },
+          status: "open",
+          price: "0",
+          image: "https://i.pinimg.com/736x/45/b0/6b/45b06b6d2cffacd8d0f3d6d017d622d2.jpg",
+        },
+        {
+          name: "Apollo",
+          description: "A god of music, prophecy, healing.",
+
+          stats: {
+            Strength: 6,
+            Intellect: 8,
+            Luck: 2,
+            Skill: 7,
+          },
+          status: "open",
+          price: "0",
+          image: "https://i.pinimg.com/736x/f7/9c/2c/f79c2c0f61e0cd130aa9e0a7f8b14dd6.jpg",
+        },
+        {
+          name: "Aphrodite",
+          description: "A goddess of love, beauty, procreation and desire.",
+
+          stats: {
+            Strength: 9,
+            Intellect: 4,
+            Luck: 5,
+            Skill: 6,
+          },
+          status: "open",
+          price: "0",
+          image: "https://i.pinimg.com/736x/ad/af/e1/adafe199d79bfdd66b47d220c8fc38ba.jpg",
+        },
+        {
+          name: "Poseidon",
+          description: "A god of the seas.",
+
+          stats: "Strength: 4, Speed: 5, Intelligence: 10",
+          status: "close",
+          price: "5 000 $COLOS",
+          image: "https://i.pinimg.com/736x/79/5f/53/795f53a382f48932109046a9e14c57fe.jpg",
+        },
+        {
+          name: "Ares",
+          description: "A god of war and violence.",
+
+          stats: "Strength: 9, Speed: 6, Intelligence: 7",
+          status: "close",
+          price: "10 000 $COLOS",
+          image: "https://i.pinimg.com/736x/84/6e/25/846e25aff40f9b9d2a731353284c08f5.jpg",
+        },
+        {
+          name: "Artemis",
+          description: "A goddess of the hunt, wildlife, childbirth, and young women.",
+
+          stats: "Strength: 9, Speed: 6, Intelligence: 7",
+          status: "close",
+          price: "50 000 $COLOS",
+          image: "https://i.pinimg.com/736x/e5/c9/ee/e5c9eec9fce0557105693248e39e0834.jpg",
+        },
+        {
+          name: "Athena",
+          description: "A goddess of war, crafts and wisdom.",
+
+          stats: "Strength: 9, Speed: 6, Intelligence: 7",
+          status: "close",
+          price: "100 000 $COLOS",
+          image: "https://i.pinimg.com/736x/78/0a/ac/780aac3f68dfcafb4921b33015edb32c.jpg",
+        },
+        {
+          name: "Demeter",
+          description: "A goddess of agriculture and grain.",
+
+          stats: "Strength: 9, Speed: 6, Intelligence: 7",
+          status: "close",
+          price: "500 000 $COLOS",
+          image: "https://i.pinimg.com/736x/2c/d7/c6/2cd7c608650686fcdc9192911fd40338.jpg",
+        },
+        {
+          name: "Hephaestus",
+          description: "A god of blacksmithing, metalworking and fire.",
+
+          stats: "Strength: 9, Speed: 6, Intelligence: 7",
+          status: "close",
+          price: "1 000 000 $COLOS",
+          image: "https://i.pinimg.com/736x/f8/b1/10/f8b110bf8e8826449d37c86762015521.jpg",
+        },
+        {
+          name: "Hermes",
+          description: "A messenger of the gods and the god of magic.",
+
+          stats: "Strength: 9, Speed: 6, Intelligence: 7",
+          status: "close",
+          price: "2 000 000 $COLOS",
+          image: "https://i.pinimg.com/736x/3b/5d/bb/3b5dbba0cee0832d08ce6857995bee6a.jpg",
+        },
+      ];
+
+      const robotBattleArenas = [
+        "Arena of Sparks and Steel",
+        "The Mechanical Colosseum",
+        "Bot Battle Zone",
+        "TechnoAvengers Arena",
+        "The Terminal Clash",
+        "Forge of Mechanisms",
+        "The Innovation Arena",
+      ];
+
+      // const imagesBattleArenas = [
+      //   ".https://buildrobot.net/1.png.",
+      //   ".https://buildrobot.net/2.png",
+      //   ".https://buildrobot.net/3.png",
+      //   ".https://buildrobot.net/4.png",
+      //   ".https://buildrobot.net/5.png",
+      //   ".https://buildrobot.net/6.png",
+      //   ".https://buildrobot.net/7.png",
+      //   ".https://buildrobot.net/8.png",
+      //   ".https://buildrobot.net/9.png",
+      //   ".https://buildrobot.net/10.png",
+      // ];
+
+      const imagesBattleArenas = [
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+        "https://i.pinimg.com/736x/41/9d/e6/419de6bc36311c01bad6d084f5cf64e0.jpg",
+      ];
+
+      const fightsData = Array.from({ length: 7 }, (_, i) => ({
+        name: `Arena ZONE ${i + 1}`,
+        description: robotBattleArenas[i],
+        occupiedSlots: Math.floor(Math.random() * 5),
+        maxSlots: 5,
+      }));
+
+      function loadHeroes() {
+        heroesSection.innerHTML = "";
+        heroesData.forEach((hero, index) => {
+          const card = document.createElement("div");
+          card.className = hero.status == "open" ? "card" : "card heroClose";
+
+          card.innerHTML = `
+                    <img src="${hero.image}" alt="${hero.name}">
+                     ${hero.price == "0" ? "<h3>" + hero.name + "</h3>" : ""}
+                    ${
+                      hero.price != "0"
+                        ? "<button class='connectBtn'>" +
+                          hero.price +
+                          "</button>"
+                        : "<p>" + hero.description + "</p>"
+                    }
+                `;
+
+          if (hero.status == "open") {
+            card.addEventListener("click", () => {
+              selectedHero = hero;
+              displayHeroDetails(hero);
+            });
+          }
+
+          heroesSection.appendChild(card);
+
+          if (index === 0) {
+            selectedHero = hero;
+            displayHeroDetails(hero);
+          }
+        });
+
+        document.querySelectorAll(".connectBtn").forEach((connect) => {
+          connect.addEventListener("click", async () => {
+            // Проверяем, установлен ли кошелек
+            if (window.solana && window.solana.isPhantom) {
+              try {
+                const resp = await window.solana.connect();
+                console.log("Wallet connected:", resp.publicKey.toString());
+              } catch (err) {
+                console.error("Connection to wallet failed:", err.message);
+              }
+            } else {
+              // Если кошелек не установлен
+              window.open("https://phantom.app/", "_blank");
+            }
+          });
+        });
+      }
+
+      function displayHeroDetails(hero) {
+        detailsSection.innerHTML = `
+                <h2>${hero.name}</h2>
+                <img src="${hero.image}" alt="${hero.name}">
+                <p>${hero.description}</p>
+                <div class="stats"> 
+                     <div class="stat">
+                    <p>Strength: ${hero.stats.Strength}</p>
+                     <div class="progress-bar" style="--progress:${
+                       hero.stats.Strength
+                     }%;"></div>
+                    </div>
+                     <div class="stat">
+                    <p>Intellect: ${hero.stats.Intellect}</p>
+                     <div class="progress-bar" style="--progress:${
+                       hero.stats.Intellect
+                     }%;"></div>
+                    </div>
+                     <div class="stat">
+                    <p>Luck: ${hero.stats.Luck}</p>
+                     <div class="progress-bar" style="--progress:${
+                       hero.stats.Luck
+                     }%;"></div>
+                    </div>
+                     <div class="stat">
+                    <p>Skill: ${hero.stats.Skill}</p>
+                     <div class="progress-bar" style="--progress:${
+                       hero.stats.Skill
+                     }%;"></div>
+                    </div>
+                </div>
+             
+                ${
+                  hero.price != "0" ? "<button>" + hero.price + "</button>" : ""
+                }
+            `;
+      }
+
+      function loadFights() {
+        fightsSection.innerHTML = "";
+        fightsData.forEach((fight) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.dataset.enemy = fight.occupiedSlots;
+          card.innerHTML = `
+                    <h3>${fight.name}</h3>
+                    <p>${fight.description}</p>
+                    <p>Slots: ${fight.occupiedSlots} / ${fight.maxSlots}</p>
+                `;
+          card.addEventListener("click", () => {
+            openFightView(card);
+          });
+          fightsSection.appendChild(card);
+        });
+      }
+
+      function openFightView(card) {
+        let enemy = card.dataset.enemy;
+
+        mainScreen.style.display = "none";
+        fightView.style.display = "block";
+
+        enemyBotsSection.innerHTML = "";
+        let botCard = document.createElement("div");
+        botCard.classList.add("details");
+        botCard.id = "selected-hero";
+        botCard.innerHTML = `
+                <h2>${selectedHero.name}</h2>
+                <img src="${selectedHero.image}" alt="${selectedHero.name}">
+                <p>Strength: ${selectedHero.stats.Strength}</p>
+                <p>Intellect: ${selectedHero.stats.Intellect}</p>
+                <p>Luck: ${selectedHero.stats.Luck}</p>
+                <p>Skill: ${selectedHero.stats.Skill}</p>
+            `;
+        enemyBotsSection.appendChild(botCard);
+        for (let i = 0; i < enemy; i++) {
+          const botCard = document.createElement("div");
+          botCard.className = `card card--${i}`;
+          botCard.innerHTML = `
+                    <h3>Bot ${i + 1}</h3>
+                    <img src="${
+                      imagesBattleArenas[Math.floor(Math.random() * 9)]
+                    }" alt="${selectedHero.name}">
+                    <p>Strength: ${Math.floor(Math.random() * 10)}</p>
+                    <p>Intellect: ${Math.floor(Math.random() * 10)}</p>
+                    <p>Luck: ${Math.floor(Math.random() * 10)}</p>
+                    <p>Skill: ${Math.floor(Math.random() * 10)}</p>
+                `;
+          enemyBotsSection.appendChild(botCard);
+        }
+      }
+
+      function closeFightView() {
+        fightView.style.display = "none";
+        mainScreen.style.display = "block";
+      }
+
+      connectButton.addEventListener("click", () => {
+        initialScreen.style.display = "none";
+        mainScreen.style.display = "block";
+        loadHeroes();
+        loadFights();
+      });
+
+      heroesTab.addEventListener("click", () => {
+        heroesTab.classList.add("active");
+        fightsTab.classList.remove("active");
+        infoTab.classList.remove("active");
+        document.getElementById("content").style.display = "flex";
+        document.getElementById("info").style.display = "none";
+        fightsSection.style.display = "none";
+      });
+
+      fightsTab.addEventListener("click", () => {
+        fightsTab.classList.add("active");
+        heroesTab.classList.remove("active");
+        infoTab.classList.remove("active");
+        document.getElementById("content").style.display = "none";
+        document.getElementById("info").style.display = "none";
+        fightsSection.style.display = "grid";
+      });
+
+      const choose = document.getElementById("Choose");
+      choose.addEventListener("click", () => {
+        fightsTab.classList.add("active");
+        heroesTab.classList.remove("active");
+        infoTab.classList.remove("active");
+        document.getElementById("content").style.display = "none";
+        document.getElementById("info").style.display = "none";
+        fightsSection.style.display = "grid";
+      });
+
+      infoTab.addEventListener("click", () => {
+        infoTab.classList.add("active");
+        heroesTab.classList.remove("active");
+        fightsTab.classList.remove("active");
+        document.getElementById("content").style.display = "none";
+        fightsSection.style.display = "none";
+        document.getElementById("info").style.display = "block";
+        // fightsSection.style.display = "grid";
+      });
+
+      backButton.addEventListener("click", closeFightView);
+    </script>
+
+    <script>
+      document.getElementById("connect").addEventListener("click", async () => {
+        // Проверяем, установлен ли кошелек
+        if (window.solana && window.solana.isPhantom) {
+          try {
+            const resp = await window.solana.connect();
+            console.log("Wallet connected:", resp.publicKey.toString());
+          } catch (err) {
+            console.error("Connection to wallet failed:", err.message);
+          }
+        } else {
+          // Если кошелек не установлен
+          window.open("https://phantom.app/", "_blank");
+        }
+      });
+
+      document
+        .getElementById("connect2")
+        .addEventListener("click", async () => {
+          // Проверяем, установлен ли кошелек
+          if (window.solana && window.solana.isPhantom) {
+            try {
+              const resp = await window.solana.connect();
+              console.log("Wallet connected:", resp.publicKey.toString());
+            } catch (err) {
+              console.error("Connection to wallet failed:", err.message);
+            }
+          } else {
+            // Если кошелек не установлен
+            window.open("https://phantom.app/", "_blank");
+          }
+        });
+    </script>
+  
+
+</body></html>
